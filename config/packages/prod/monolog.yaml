@@ -1,0 +1,17 @@
+monolog:Per a poder utilitzar Doctrine, hem d'indicar com connectar al servidor de base de dades que anem a utilitzar. Aquests paràmetres de connexió es poden configurar en l'arxiu .env del nostre projecte. Aquest és un arxiu on es defineixen certes variables pròpies d'entorn, que després es processen i es converteixen en variables reals. En el nostre cas, definim una variable anomenada DATABASE_URL, amb una URL on s'especifiquen tant l'adreça i port de connexió a la base de dades, com el login i password necessaris per a accedir, així com el nom de la base de dades a la qual connectar. Per exemple, per a una base de dades MySQL, l'estructura general serà aquesta:
+    handlers:
+        main:
+            type: fingers_crossed
+            action_level: error
+            handler: nested
+            excluded_http_codes: [404, 405]
+            buffer_size: 50 # How many messages should be saved? Prevent memory leaks
+        nested:
+            type: stream
+            path: php://stderr
+            level: debug
+            formatter: monolog.formatter.json
+        console:
+            type: console
+            process_psr_3_messages: false
+            channels: ["!event", "!doctrine"]

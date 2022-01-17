@@ -1,0 +1,8 @@
+<ul>
+    <li><strong>{{ movie.title }}</strong></li>
+    <li><strong>Tagline</strong>: {{ movie.tagline }}</li>
+    <li><strong>Release date</strong>: {{ movie.release_date | date("Y-d-d") }}</li>
+    <li><strong>Poster</strong>: <img src="{{ asset('images/') ~ movie.poster}}" /></li>
+
+</ul>
+<br>
