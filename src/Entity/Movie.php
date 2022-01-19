@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\MovieRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -47,6 +49,20 @@ class Movie
      */
     private $rating;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Gender::class, inversedBy="movies")
+     */
+    private $gender;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Rating::class, mappedBy="movie")
+     */
+    private $ratings;
+
+    public function __construct()
+    {
+        $this->ratings = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -121,6 +137,48 @@ class Movie
     public function setRating(float $rating): self
     {
         $this->rating = $rating;
+
+        return $this;
+    }
+
+    public function getGender(): ?Gender
+    {
+        return $this->gender;
+    }
+
+    public function setGender(?Gender $gender): self
+    {
+        $this->gender = $gender;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Rating[]
+     */
+    public function getRatings(): Collection
+    {
+        return $this->ratings;
+    }
+
+    public function addRating(Rating $rating): self
+    {
+        if (!$this->ratings->contains($rating)) {
+            $this->ratings[] = $rating;
+            $rating->setMovie($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRating(Rating $rating): self
+    {
+        if ($this->ratings->removeElement($rating)) {
+            // set the owning side to null (unless already changed)
+            if ($rating->getMovie() === $this) {
+                $rating->setMovie(null);
+            }
+        }
 
         return $this;
     }
